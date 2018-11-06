@@ -3,6 +3,7 @@ package ru.dohod.command;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import javax.swing.filechooser.FileSystemView;
 import java.io.*;
 
 public class ReadDrivesCommand implements ICommand {
@@ -14,10 +15,12 @@ public class ReadDrivesCommand implements ICommand {
 
     public void run() {
         if (System.getProperty("os.name").contains("win")) {
-            File[] driveFiles = File.listRoots();
-            if (driveFiles != null) {
-                for (File aDrive : driveFiles) {
-                    System.out.println("Drive: " + aDrive);
+            File[] drives = File.listRoots();
+            FileSystemView fileSystemView = FileSystemView.getFileSystemView();
+            if (drives != null) {
+                for (File aDrive : drives) {
+                    System.out.println("Drive name: " + aDrive);
+                    System.out.println("Description: " + fileSystemView.getSystemTypeDescription(aDrive));
                 }
             }
         } else {
