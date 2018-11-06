@@ -14,21 +14,19 @@ public final class CommandFactory {
         Options options = new Options();
         Option.Builder optionBuilder = Option.builder();
         OptionGroup optionGroup = new OptionGroup();
+        optionGroup.setRequired(true);
         optionGroup.addOption(optionBuilder.argName(READ_DRIVES_ARG_NAME)
                 .longOpt(READ_DRIVES_ARG_NAME)
-                .hasArg(false)
                 .desc("read local drives and print them").build());
         optionGroup.addOption(optionBuilder.argName(FIND_FILE_ARG_NAME)
                 .longOpt(FIND_FILE_ARG_NAME)
-                .hasArg(false)
                 .desc("find file using absolute path and file name").build());
         optionGroup.addOption(optionBuilder.argName(EDIT_FILE_ARG_NAME)
                 .longOpt(EDIT_FILE_ARG_NAME)
-                .hasArg(false)
                 .desc("add a line to the beginning of each file found").build());
         options.addOptionGroup(optionGroup);
         CommandLineParser commandLineParser = new DefaultParser();
-        CommandLine commandLine = commandLineParser.parse(options, args, true);
+        CommandLine commandLine = commandLineParser.parse(options, args, false);
         if (commandLine.hasOption(READ_DRIVES_ARG_NAME)) {
             return new ReadDrivesCommand();
         }

@@ -33,11 +33,6 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
-        <dependency>
-            <groupId>net.samuelcampos</groupId>
-            <artifactId>usbdrivedetector</artifactId>
-            <version>2.0.4</version>
-        </dependency>
     </dependencies>
 
 </project>

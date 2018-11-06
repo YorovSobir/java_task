@@ -24,7 +24,7 @@ public class FindFileCommand implements ICommand {
                     (path, basicFileAttributes) -> path.toFile().getName().matches(".*" + fileName + ".*"))
                     .forEach(path -> System.out.println(path.toFile().getAbsolutePath()));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Cannot find files", e);
         }
     }
 }

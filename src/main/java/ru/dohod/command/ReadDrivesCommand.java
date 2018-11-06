@@ -1,14 +1,9 @@
 package ru.dohod.command;
 
-import net.samuelcampos.usbdrivedetector.USBDeviceDetectorManager;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.*;
 
 public class ReadDrivesCommand implements ICommand {
     private static final Logger LOGGER = LogManager.getLogger(ReadDrivesCommand.class);
@@ -18,26 +13,32 @@ public class ReadDrivesCommand implements ICommand {
     }
 
     public void run() {
-//        FileSystem fs = FileSystems.getDefault();
-//
-//        for (Path rootPath : fs.getRootDirectories()) {
-//            try {
-//                FileStore store = Files.getFileStore(rootPath);
-//                System.out.println(rootPath + ": " + store.type());
-//            }
-//            catch (IOException e) {
-//                LOGGER.warn(rootPath + ": " + "<error getting store details>", e);
-//            }
-//        }
-        Set<String> drives = new HashSet<>();
-        File[] driveFiles = File.listRoots();
-        if (driveFiles != null) {
-            for (File aDrive : driveFiles) {
-                drives.add(aDrive.toString());
+        if (System.getProperty("os.name").contains("win")) {
+            File[] driveFiles = File.listRoots();
+            if (driveFiles != null) {
+                for (File aDrive : driveFiles) {
+                    System.out.println("Drive: " + aDrive);
+                }
+            }
+        } else {
+            try {
+                final String command = "lshw -class disk | sed -r '/(logical name)|(description)|(\\*)/!d'";
+                String[] cmd = {
+                        "/bin/sh",
+                        "-c",
+                        command
+                };
+                Process process = Runtime.getRuntime().exec(cmd);
+                try (BufferedReader in =
+                        new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.error("cannot execute command", e);
             }
         }
-        USBDeviceDetectorManager driveDetector = new USBDeviceDetectorManager();
-        driveDetector.getRemovableDevices().forEach(drive -> drives.add(drive.toString()));
-        drives.forEach(drive -> System.out.println(String.format("Drive: %s", drive)));
     }
 }
