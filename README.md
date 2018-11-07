@@ -9,3 +9,4 @@
   
 # Attention
 * Linux and MacOS users must install **lshw** util to work with command **--readDrives**, because standard java methods cannot get list of drives, usb flash, cd/dvd-rom on these OS, unlike **lshw** (test on ext4 File system).
+* run command **--readDrives** as superuser (`sudo java -jar test*.jar --readDrives`)
