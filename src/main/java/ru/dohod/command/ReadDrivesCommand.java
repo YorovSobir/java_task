@@ -14,7 +14,7 @@ public class ReadDrivesCommand implements ICommand {
     }
 
     public void run() {
-        if (System.getProperty("os.name").contains("win")) {
+        if (System.getProperty("os.name").contains("Win")) {
             File[] drives = File.listRoots();
             FileSystemView fileSystemView = FileSystemView.getFileSystemView();
             if (drives != null) {
