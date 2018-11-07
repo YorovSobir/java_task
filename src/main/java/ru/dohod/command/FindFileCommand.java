@@ -3,6 +3,7 @@ package ru.dohod.command;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,7 +22,10 @@ public class FindFileCommand implements ICommand {
         LOGGER.info(String.format("run with args: path = %s; file = %s", absolutePath, fileName));
         try {
             Files.find(Paths.get(absolutePath), 1,
-                    (path, basicFileAttributes) -> path.toFile().getName().matches(".*" + fileName + ".*"))
+                    (path, basicFileAttributes) -> {
+                        File file = path.toFile();
+                        return file.isFile() && file.getName().matches(".*" + fileName + ".*");
+                    })
                     .forEach(path -> System.out.println(path.toFile().getAbsolutePath()));
         } catch (IOException e) {
             LOGGER.info("Cannot find files", e);
