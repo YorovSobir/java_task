@@ -21,23 +21,27 @@ public class EditFileCommand implements ICommand {
         this.fileName = fileName;
     }
 
-    public void run() throws IOException {
+    public void run() {
         LOGGER.info(String.format("run with args: path = %s; file = %s", absolutePath, fileName));
-        Files.find(Paths.get(absolutePath), 1,
-                (path, basicFileAttributes) -> path.toFile().getName().matches(".*" + fileName + ".*"))
-                .forEach(path -> {
-                    System.out.println(path.toFile().getAbsolutePath());
-                    try {
-                        byte[] buffer = Files.readAllBytes(path);
+        try {
+            Files.find(Paths.get(absolutePath), 1,
+                    (path, basicFileAttributes) -> path.toFile().getName().matches(".*" + fileName + ".*"))
+                    .forEach(path -> {
+                        System.out.println(path.toFile().getAbsolutePath());
+                        try {
+                            byte[] buffer = Files.readAllBytes(path);
 
-                        try (OutputStream out = new FileOutputStream(path.toFile())) {
-                            out.write(DEFAULT_LINE.getBytes());
-                            out.write(System.lineSeparator().getBytes());
-                            out.write(buffer);
+                            try (OutputStream out = new FileOutputStream(path.toFile())) {
+                                out.write(DEFAULT_LINE.getBytes());
+                                out.write(System.lineSeparator().getBytes());
+                                out.write(buffer);
+                            }
+                        } catch (IOException e) {
+                            LOGGER.error("Unexpected error", e);
                         }
-                    } catch (IOException e) {
-                        LOGGER.error("Unexpected error", e);
-                    }
-                });
+                    });
+        } catch (IOException e) {
+            LOGGER.info("Cannot find files", e);
+        }
     }
 }

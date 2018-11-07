@@ -26,7 +26,7 @@ public final class CommandFactory {
                 .desc("add a line to the beginning of each file found").build());
         options.addOptionGroup(optionGroup);
         CommandLineParser commandLineParser = new DefaultParser();
-        CommandLine commandLine = commandLineParser.parse(options, args, false);
+        CommandLine commandLine = commandLineParser.parse(options, args, true);
         if (commandLine.hasOption(READ_DRIVES_ARG_NAME)) {
             return new ReadDrivesCommand();
         }
